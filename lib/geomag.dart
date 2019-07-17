@@ -5,7 +5,7 @@ library geomag;
 
 import 'dart:math';
 import 'src/wmm_cof.dart';
-import 'src/WMM.COF.dart';
+import 'src/wmm_cof_data.dart';
 
 export 'src/wmm_cof.dart';
 
@@ -27,7 +27,7 @@ export 'src/wmm_cof.dart';
 class GeoMag {
   static GeoMag _bundledInstance;
   factory GeoMag() =>
-      _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofFile));
+      _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
 
   final WmmCof coeffs;
   final maxord = 12;
@@ -100,7 +100,9 @@ class GeoMag {
     });
     snorm[0][0] = 1.0;
     k[1][1] = 0.0; // That's what it said.
-    for (var n = 1; n <= maxord; n++) {
+
+    int n;
+    for (n = 1; n <= maxord; n++) {
       snorm[0][n] = snorm[0][n - 1] * (2.0 * n - 1) / n;
       var j = 2.0;
       //for (m=0,D1=1,D2=(n-m+D1)/D1;D2>0;D2--,m+=D1):
@@ -314,6 +316,6 @@ class GeoMagResult {
   final double lon;
   final double alt;
 
-  ///
+  /// Years since the [WmmCof.epoch].
   final double time;
 }
