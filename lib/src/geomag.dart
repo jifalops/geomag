@@ -49,7 +49,7 @@ class GeoMag {
     }
 
     var epoch = wmm.epoch,
-        z = <double>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0],
+        z = <double>[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         maxord = 12,
         tc = [
       z.sublist(1),
@@ -412,6 +412,8 @@ class GeoMag {
 class GeoMagResult {
   const GeoMagResult._(this.dec, this.dip, this.ti, this.bh, this.bx, this.by,
       this.bz, this.lat, this.lon, this.gv, this.time);
+
+  /// Declination
   final double dec;
   final double dip;
   final double ti;
@@ -425,4 +427,8 @@ class GeoMagResult {
 
   /// Years since the [WmmCof.epoch].
   final double time;
+
+  @override
+  String toString() =>
+      '{dec: $dec, dip: $dip, ti: $ti, bh: $bh, bx: $bx, by: $by, bz: $bz, lat: $lat, lon: $lon, gv: $gv}';
 }

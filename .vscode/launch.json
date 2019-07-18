@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "Dart",
-      "program": "example/geomag_example.dart",
+      "program": "example/flutter/lib/main.dart",
       "request": "launch",
       "type": "dart"
     }
