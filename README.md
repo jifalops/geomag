@@ -17,3 +17,7 @@ https://github.com/cmweiss/geomagJS.
 > Satellite and Information Service, National Geophysical Data Center.
 
 ![screenshot.png](screenshot.png)
+
+Magnetic declination is different everywhere on Earth and even changes over time.
+Every five years or so, a couple of governing bodies release coefficients data for
+calculating the magnetic declination at a given lat/lng and time.
