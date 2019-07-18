@@ -16,4 +16,4 @@ https://github.com/cmweiss/geomagJS.
 > Adapted from the geomagc software and World Magnetic Model of the NOAA
 > Satellite and Information Service, National Geophysical Data Center.
 
-The WMM-2015v2.COF data in included for convenience.
+![screenshot.png](screenshot.png)
