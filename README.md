@@ -12,6 +12,8 @@ to initialize. You can provide your own or use the bundled data, WMM-2015v2
 from 09/18/2018. Use [calculate()] to process GPS coordinates into a
 [GeoMagResult].
 
+Accuracy is roughly within 0.2 degrees of test values.
+
 See http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml and
 https://www.ngdc.noaa.gov/geomag/WMM/wmm_rdownload.shtml.
 
