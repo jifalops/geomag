@@ -59,11 +59,15 @@ class _MyAppState extends State<MyApp> {
                   _declination == null
                       ? Container()
                       : Transform.rotate(
-                          angle: _declination * math.pi / 180,
+                          angle: -1 * _declination * math.pi / 180,
                           child: Column(
                             children: [
                               Text('True\nNorth\n(${_declination.round()}°)'),
-                              Container(color: Colors.red, width: 1, height: 300,),
+                              Container(
+                                color: Colors.red,
+                                width: 1,
+                                height: 200,
+                              ),
                             ],
                           ),
                         ),

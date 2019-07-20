@@ -413,7 +413,7 @@ class GeoMagResult {
   const GeoMagResult._(this.dec, this.dip, this.ti, this.bh, this.bx, this.by,
       this.bz, this.lat, this.lon, this.gv, this.time);
 
-  /// Declination
+  /// Declination in degrees east of geographic north.
   final double dec;
   final double dip;
   final double ti;

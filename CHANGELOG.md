@@ -1,6 +1,6 @@
-## 0.1.0+1
+## 0.1.0+4
 
-- Added Flutter example
+- Fix Flutter example
 
 ## 0.1.0
 
