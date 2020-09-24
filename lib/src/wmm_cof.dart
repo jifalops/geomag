@@ -36,7 +36,7 @@ class WmmCof {
     double epoch;
     String model;
     String modelDate;
-    final data = List<WmmCofLineData>();
+    final data = <WmmCofLineData>[];
     lines.forEach((line) {
       final linevals = line.trim().split(fieldSplitterRegex);
       if (linevals.length == 3) {

@@ -1,3 +1,8 @@
+## 0.1.1
+
+- Upgrade to 2020 WMM.COF
+- Fix dependency issues.
+
 ## 0.1.0+5
 
 - Add test and test results.
