@@ -1,10 +1,10 @@
 name: geomag
 description: Translate GPS location data to geo-magnetic data such as magnetic declination.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/jifalops/geomag
 
 environment:
-  sdk: '>=2.11.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   intl:

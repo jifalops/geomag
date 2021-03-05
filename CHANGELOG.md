@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Support null safety
+
 ## 0.1.1
 
 - Upgrade to 2020 WMM.COF

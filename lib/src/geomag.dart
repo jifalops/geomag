@@ -4,14 +4,13 @@ import 'package:geomag/geomag.dart';
 import 'wmm_cof.dart';
 import 'wmm_cof_data.dart';
 
-typedef _CalcFunction = GeoMagResult Function(double glat, double glon,
-    [double hFeet, DateTime date]);
+typedef _CalcFunction = GeoMagResult Function(double glat, double glon, [double hFeet, DateTime? date]);
 
 /// Translate GPS location data to geo-magnetic data such as magnetic declination.
 ///
 /// [GeoMag] takes data from the World Magnetic Model Coefficients, [WmmCof],
-/// to initialize. You can provide your own or use the bundled data, WMM-2015v2
-/// from 09/18/2018. Use [calculate()] to process GPS coordinates into a
+/// to initialize. You can provide your own or use the bundled data from 2020.
+/// Use [calculate()] to process GPS coordinates into a
 /// [GeoMagResult].
 ///
 /// See http://www.ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml and
@@ -23,23 +22,15 @@ typedef _CalcFunction = GeoMagResult Function(double glat, double glon,
 /// > Adapted from the geomagc software and World Magnetic Model of the NOAA
 /// > Satellite and Information Service, National Geophysical Data Center.
 class GeoMag {
-  static GeoMag _bundledInstance;
-  factory GeoMag() =>
-      _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
+  static GeoMag? _bundledInstance;
+  factory GeoMag() => _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
   GeoMag.fromWmmCof(WmmCof wmmCof) : _calcFunction = _geoMagFactory(wmmCof);
   final _CalcFunction _calcFunction;
-  GeoMagResult calculate(double lat, double lng,
-      [double heightFeet = 0, DateTime date]) {
-    try {
-      return _calcFunction(lat, lng, heightFeet, date);
-    } catch (e, s) {
-      print(e);
-      print(s);
-      return null;
-    }
+  GeoMagResult calculate(double lat, double lng, [double heightFeet = 0, DateTime? date]) {
+    return _calcFunction(lat, lng, heightFeet, date);
   }
 
-  static _geoMagFactory(WmmCof wmm) {
+  static dynamic _geoMagFactory(WmmCof wmm) {
     double rad2deg(rad) {
       return rad * (180 / pi);
     }
@@ -182,7 +173,7 @@ class GeoMag {
     pp[0] = 1.0;
     p[0][0] = 1;
 
-    for (WmmCofLineData i in wmm.wmm) {
+    for (var i in wmm.wmm) {
       var m = i.m - 0, n = i.n - 0;
       if (m <= n) {
         c[m][n] = i.gnm;
@@ -193,7 +184,7 @@ class GeoMag {
         }
       }
     }
-    wmm = null;
+    // wmm = null;
 
     /* CONVERT SCHMIDT NORMALIZED GAUSS COEFFICIENTS TO UNNORMALIZED */
     snorm[0][0] = 1;
@@ -218,23 +209,17 @@ class GeoMag {
     }
     k[1][1] = 0.0;
 
-    return (double glat, double glon, [double hFeet = 0, DateTime date]) {
-      decimalDate(DateTime date) {
+    return (double glat, double glon, [double hFeet = 0, DateTime? date]) {
+      double decimalDate(DateTime? date) {
         date ??= DateTime.now();
         var year = date.year,
-            daysInYear = 365 +
-                (((year % 400 == 0) || (year % 4 == 0 && (year % 100 > 0)))
-                    ? 1
-                    : 0),
+            daysInYear = 365 + (((year % 400 == 0) || (year % 4 == 0 && (year % 100 > 0))) ? 1 : 0),
             msInYear = daysInYear * 24 * 60 * 60 * 1000;
 
-        return date.year +
-            (date.difference(DateTime(date.year, 1, 1)).inMilliseconds /
-                msInYear);
+        return date.year + (date.difference(DateTime(date.year, 1, 1)).inMilliseconds / msInYear);
       }
 
-      var alt = hFeet /
-              3280.8399, // convert h (in feet) to kilometers or set default of 0
+      var alt = hFeet / 3280.8399, // convert h (in feet) to kilometers or set default of 0
           time = decimalDate(date),
           dt = time - epoch,
           rlat = deg2rad(glat),
@@ -319,8 +304,7 @@ class GeoMag {
               dp[m][n - 2] = 0.0;
             }
             p[m][n] = ct * p[m][n - 1] - k[m][n] * p[m][n - 2];
-            dp[m][n] =
-                ct * dp[m][n - 1] - st * p[m][n - 1] - k[m][n] * dp[m][n - 2];
+            dp[m][n] = ct * dp[m][n - 1] - st * p[m][n - 1] - k[m][n] * dp[m][n - 2];
           }
 
           /*
@@ -403,15 +387,14 @@ class GeoMag {
         }
       }
 
-      return GeoMagResult._(
-          dec, dip, ti, bh, bx, by, bz, glat, glon, gv, epoch);
+      return GeoMagResult._(dec, dip, ti, bh, bx, by, bz, glat, glon, gv, epoch);
     };
   }
 }
 
 class GeoMagResult {
-  const GeoMagResult._(this.dec, this.dip, this.ti, this.bh, this.bx, this.by,
-      this.bz, this.lat, this.lon, this.gv, this.time);
+  const GeoMagResult._(
+      this.dec, this.dip, this.ti, this.bh, this.bx, this.by, this.bz, this.lat, this.lon, this.gv, this.time);
 
   /// Declination in degrees east of geographic north.
   final double dec;
