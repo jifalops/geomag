@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:intl/intl.dart' show DateFormat;
 
 /// Represents the data in a WMM.COF file.
@@ -15,10 +14,6 @@ class WmmCof {
 
   static final fieldSplitterRegex = RegExp(r'\s+');
   static final modelDateFormat = DateFormat('MM/dd/yyyy');
-
-  factory WmmCof.fromFileSync(File wmmCof) => WmmCof.fromLines(wmmCof.readAsLinesSync());
-
-  static Future<WmmCof> fromFile(File wmmCof) async => WmmCof.fromLines(await wmmCof.readAsLines());
 
   /// Parse a WMM.COF file as a string.
   factory WmmCof.fromString(String wmmCof) => WmmCof.fromLines(wmmCof.split('\n'));
@@ -47,6 +42,7 @@ class WmmCof {
 class WmmCofLineData {
   const WmmCofLineData(this.n, this.m, this.gnm, this.hnm, this.dgnm, this.dhnm);
 
+  /// From splitting a line.
   WmmCofLineData.fromParts(List<String> parts)
       : assert(parts.length == 6),
         n = int.parse(parts[0]),

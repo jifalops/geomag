@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Support the web
+
 ## 0.1.2
 
 - Support null safety

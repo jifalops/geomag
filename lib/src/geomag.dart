@@ -26,6 +26,8 @@ class GeoMag {
   factory GeoMag() => _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
   GeoMag.fromWmmCof(WmmCof wmmCof) : _calcFunction = _geoMagFactory(wmmCof);
   final _CalcFunction _calcFunction;
+
+  /// Calculate various geomagnetic values based on your latitude, longitude.
   GeoMagResult calculate(double lat, double lng, [double heightFeet = 0, DateTime? date]) {
     return _calcFunction(lat, lng, heightFeet, date);
   }
@@ -392,6 +394,7 @@ class GeoMag {
   }
 }
 
+/// The result of calculating your magnetic declination and other values.
 class GeoMagResult {
   const GeoMagResult._(
       this.dec, this.dip, this.ti, this.bh, this.bx, this.by, this.bz, this.lat, this.lon, this.gv, this.time);
@@ -404,7 +407,11 @@ class GeoMagResult {
   final double bx;
   final double by;
   final double bz;
+
+  /// Latitude
   final double lat;
+
+  /// Longitude
   final double lon;
   final double gv;
 
