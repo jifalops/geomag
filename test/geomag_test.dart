@@ -33,10 +33,12 @@ void main() {
 void runTest(int places) {
   testValues.asMap().forEach((i, v) {
     test('Test values $i', () {
-      final result = gm.calculate(v[2] as double, v[3] as double, v[1] as double, v[0] as DateTime);
+      final result = gm.calculate(
+          v[2] as double, v[3] as double, v[1] as double, v[0] as DateTime);
       expect(round(result.dec, places), round(v[4] as double, places));
     });
   });
 }
 
-double round(double value, int places) => (value * pow(10, places)).round() / pow(10, places);
+double round(double value, int places) =>
+    (value * pow(10, places)).round() / pow(10, places);

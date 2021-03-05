@@ -4,7 +4,8 @@ import 'package:geomag/geomag.dart';
 import 'wmm_cof.dart';
 import 'wmm_cof_data.dart';
 
-typedef _CalcFunction = GeoMagResult Function(double glat, double glon, [double hFeet, DateTime? date]);
+typedef _CalcFunction = GeoMagResult Function(double glat, double glon,
+    [double hFeet, DateTime? date]);
 
 /// Translate GPS location data to geo-magnetic data such as magnetic declination.
 ///
@@ -23,12 +24,14 @@ typedef _CalcFunction = GeoMagResult Function(double glat, double glon, [double 
 /// > Satellite and Information Service, National Geophysical Data Center.
 class GeoMag {
   static GeoMag? _bundledInstance;
-  factory GeoMag() => _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
+  factory GeoMag() =>
+      _bundledInstance ??= GeoMag.fromWmmCof(WmmCof.fromString(wmmCofData));
   GeoMag.fromWmmCof(WmmCof wmmCof) : _calcFunction = _geoMagFactory(wmmCof);
   final _CalcFunction _calcFunction;
 
   /// Calculate various geomagnetic values based on your latitude, longitude.
-  GeoMagResult calculate(double lat, double lng, [double heightFeet = 0, DateTime? date]) {
+  GeoMagResult calculate(double lat, double lng,
+      [double heightFeet = 0, DateTime? date]) {
     return _calcFunction(lat, lng, heightFeet, date);
   }
 
@@ -215,13 +218,19 @@ class GeoMag {
       double decimalDate(DateTime? date) {
         date ??= DateTime.now();
         var year = date.year,
-            daysInYear = 365 + (((year % 400 == 0) || (year % 4 == 0 && (year % 100 > 0))) ? 1 : 0),
+            daysInYear = 365 +
+                (((year % 400 == 0) || (year % 4 == 0 && (year % 100 > 0)))
+                    ? 1
+                    : 0),
             msInYear = daysInYear * 24 * 60 * 60 * 1000;
 
-        return date.year + (date.difference(DateTime(date.year, 1, 1)).inMilliseconds / msInYear);
+        return date.year +
+            (date.difference(DateTime(date.year, 1, 1)).inMilliseconds /
+                msInYear);
       }
 
-      var alt = hFeet / 3280.8399, // convert h (in feet) to kilometers or set default of 0
+      var alt = hFeet /
+              3280.8399, // convert h (in feet) to kilometers or set default of 0
           time = decimalDate(date),
           dt = time - epoch,
           rlat = deg2rad(glat),
@@ -306,7 +315,8 @@ class GeoMag {
               dp[m][n - 2] = 0.0;
             }
             p[m][n] = ct * p[m][n - 1] - k[m][n] * p[m][n - 2];
-            dp[m][n] = ct * dp[m][n - 1] - st * p[m][n - 1] - k[m][n] * dp[m][n - 2];
+            dp[m][n] =
+                ct * dp[m][n - 1] - st * p[m][n - 1] - k[m][n] * dp[m][n - 2];
           }
 
           /*
@@ -389,15 +399,16 @@ class GeoMag {
         }
       }
 
-      return GeoMagResult._(dec, dip, ti, bh, bx, by, bz, glat, glon, gv, epoch);
+      return GeoMagResult._(
+          dec, dip, ti, bh, bx, by, bz, glat, glon, gv, epoch);
     };
   }
 }
 
 /// The result of calculating your magnetic declination and other values.
 class GeoMagResult {
-  const GeoMagResult._(
-      this.dec, this.dip, this.ti, this.bh, this.bx, this.by, this.bz, this.lat, this.lon, this.gv, this.time);
+  const GeoMagResult._(this.dec, this.dip, this.ti, this.bh, this.bx, this.by,
+      this.bz, this.lat, this.lon, this.gv, this.time);
 
   /// Declination in degrees east of geographic north.
   final double dec;

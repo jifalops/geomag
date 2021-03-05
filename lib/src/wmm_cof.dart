@@ -2,7 +2,11 @@ import 'package:intl/intl.dart' show DateFormat;
 
 /// Represents the data in a WMM.COF file.
 class WmmCof {
-  WmmCof({required this.epoch, required this.model, required this.modelDate, required List<WmmCofLineData> wmm})
+  WmmCof(
+      {required this.epoch,
+      required this.model,
+      required this.modelDate,
+      required List<WmmCofLineData> wmm})
       : wmm = List.unmodifiable(wmm),
         date = modelDateFormat.parse(modelDate);
 
@@ -16,7 +20,8 @@ class WmmCof {
   static final modelDateFormat = DateFormat('MM/dd/yyyy');
 
   /// Parse a WMM.COF file as a string.
-  factory WmmCof.fromString(String wmmCof) => WmmCof.fromLines(wmmCof.split('\n'));
+  factory WmmCof.fromString(String wmmCof) =>
+      WmmCof.fromLines(wmmCof.split('\n'));
 
   /// Parse a WMM.COF file line by line.
   factory WmmCof.fromLines(List<String> lines) {
@@ -34,13 +39,15 @@ class WmmCof {
         data.add(WmmCofLineData.fromParts(linevals));
       }
     });
-    return WmmCof(epoch: epoch!, model: model!, modelDate: modelDate!, wmm: data);
+    return WmmCof(
+        epoch: epoch!, model: model!, modelDate: modelDate!, wmm: data);
   }
 }
 
 /// Represents a data line in a WMM.COF file.
 class WmmCofLineData {
-  const WmmCofLineData(this.n, this.m, this.gnm, this.hnm, this.dgnm, this.dhnm);
+  const WmmCofLineData(
+      this.n, this.m, this.gnm, this.hnm, this.dgnm, this.dhnm);
 
   /// From splitting a line.
   WmmCofLineData.fromParts(List<String> parts)
