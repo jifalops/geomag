@@ -7,8 +7,8 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  intl:
-  meta:
+  intl: ^0.17.0
+  meta: ^1.0.0
 
 dev_dependencies:
   pedantic: ^1.8.0+1
