@@ -6,8 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geomag/geomag.dart';
 
 Future<double> _getDeclination() async {
-  final pos = await Geolocator().getLastKnownPosition() ??
-      await Geolocator().getCurrentPosition();
+  final pos = await Geolocator.getLastKnownPosition() ??
+      await Geolocator.getCurrentPosition();
   if (pos == null) return null;
   final result = await GeoMag().calculate(
       pos.latitude, pos.longitude, pos.altitude * 3.28084); // m -> ft
@@ -28,9 +28,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    FlutterCompass.events.listen((double direction) {
+    FlutterCompass.events.listen((CompassEvent event) {
       setState(() {
-        _direction = direction;
+        _direction = event.heading;
       });
     });
     _getDeclination().then((dec) {

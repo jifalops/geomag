@@ -35,7 +35,7 @@ class GeoMag {
     return _calcFunction(lat, lng, heightFeet, date);
   }
 
-  static dynamic _geoMagFactory(WmmCof wmm) {
+  static _CalcFunction _geoMagFactory(WmmCof wmm) {
     double rad2deg(rad) {
       return rad * (180 / pi);
     }
@@ -134,8 +134,6 @@ class GeoMag {
           z.sublist(1),
           z.sublist(1)
         ],
-        n,
-        m,
         snorm = [
           z.sublist(1),
           z.sublist(1),
@@ -169,8 +167,7 @@ class GeoMag {
         ],
         flnmj,
         fn = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-        fm = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        D2;
+        fm = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     tc[0][0] = 0;
     sp[0] = 0.0;
@@ -194,12 +191,12 @@ class GeoMag {
     /* CONVERT SCHMIDT NORMALIZED GAUSS COEFFICIENTS TO UNNORMALIZED */
     snorm[0][0] = 1;
 
-    for (n = 1; n <= maxord; n++) {
+    for (var n = 1; n <= maxord; n++) {
       snorm[0][n] = snorm[0][n - 1] * (2 * n - 1) / n;
       j = 2;
 
-      m = 0;
-      for (D2 = (n - m + 1); D2 > 0; D2--, m++) {
+      var m = 0;
+      for (var D2 = (n - m + 1); D2 > 0; D2--, m++) {
         k[m][n] = (((n - 1) * (n - 1)) - (m * m)) / ((2 * n - 1) * (2 * n - 3));
         if (m > 0) {
           flnmj = ((n - m + 1) * j) / (n + m);
@@ -231,8 +228,8 @@ class GeoMag {
 
       var alt = hFeet /
               3280.8399, // convert h (in feet) to kilometers or set default of 0
-          time = decimalDate(date),
-          dt = time - epoch,
+          time = decimalDate(date);
+      double dt = time - epoch,
           rlat = deg2rad(glat),
           rlon = deg2rad(glon),
           srlon = sin(rlon),
@@ -261,7 +258,6 @@ class GeoMag {
           temp1,
           temp2,
           parp,
-          D4,
           bx,
           by,
           bz,
@@ -269,7 +265,7 @@ class GeoMag {
           ti,
           dec,
           dip,
-          gv;
+          gv = 0.0;
       sp[1] = srlon;
       cp[1] = crlon;
 
@@ -285,7 +281,7 @@ class GeoMag {
       ca = (alt + d) / r;
       sa = c2 * crlat * srlat / (r * d);
 
-      for (m = 2; m <= maxord; m++) {
+      for (var m = 2; m <= maxord; m++) {
         sp[m] = sp[1] * cp[m - 1] + cp[1] * sp[m - 1];
         cp[m] = cp[1] * cp[m - 1] - sp[1] * sp[m - 1];
       }
@@ -293,14 +289,14 @@ class GeoMag {
       aor = re / r;
       ar = aor * aor;
 
-      for (n = 1; n <= maxord; n++) {
+      for (var n = 1; n <= maxord; n++) {
         ar = ar * aor;
-        m = 0;
-        for (D4 = (n + m + 1); D4 > 0; D4--, m++) {
+        var m = 0;
+        for (var D4 = (n + m + 1); D4 > 0; D4--, m++) {
           /*
-				COMPUTE UNNORMALIZED ASSOCIATED LEGENDRE POLYNOMIALS
-				AND DERIVATIVES VIA RECURSION RELATIONS
-		*/
+				  COMPUTE UNNORMALIZED ASSOCIATED LEGENDRE POLYNOMIALS
+			  	AND DERIVATIVES VIA RECURSION RELATIONS
+		      */
           if (n == m) {
             p[m][n] = st * p[m - 1][n - 1];
             dp[m][n] = st * dp[m - 1][n - 1] + ct * p[m - 1][n - 1];
@@ -320,8 +316,8 @@ class GeoMag {
           }
 
           /*
-				TIME ADJUST THE GAUSS COEFFICIENTS
-		*/
+				  TIME ADJUST THE GAUSS COEFFICIENTS
+		      */
 
           tc[m][n] = c[m][n] + dt * cd[m][n];
           if (m != 0) {
@@ -329,8 +325,8 @@ class GeoMag {
           }
 
           /*
-				ACCUMULATE TERMS OF THE SPHERICAL HARMONIC EXPANSIONS
-		*/
+				  ACCUMULATE TERMS OF THE SPHERICAL HARMONIC EXPANSIONS
+		      */
           par = ar * p[m][n];
           if (m == 0) {
             temp1 = tc[m][n] * cp[m];
@@ -344,7 +340,7 @@ class GeoMag {
           br += (fn[n] * temp1 * par);
           /*
 					SPECIAL CASE:  NORTH/SOUTH GEOGRAPHIC POLES
-		*/
+		      */
           if (st == 0.0 && m == 1) {
             if (n == 1) {
               pp[n] = pp[n - 1];
@@ -361,7 +357,7 @@ class GeoMag {
       /*
 			ROTATE MAGNETIC VECTOR COMPONENTS FROM SPHERICAL TO
 			GEODETIC COORDINATES
-		*/
+		  */
       bx = -bt * ca - br * sa;
       by = bp;
       bz = bt * sa - br * ca;
@@ -369,7 +365,7 @@ class GeoMag {
       /*
 			COMPUTE DECLINATION (DEC), INCLINATION (DIP) AND
 			TOTAL INTENSITY (TI)
-		*/
+		  */
       bh = sqrt((bx * bx) + (by * by));
       ti = sqrt((bh * bh) + (bz * bz));
       dec = rad2deg(atan2(by, bx));
@@ -380,12 +376,12 @@ class GeoMag {
 			GEODETIC POSITION IS IN THE ARCTIC OR ANTARCTIC
 			(I.E. GLAT > +55 DEGREES OR GLAT < -55 DEGREES)
 			OTHERWISE, SET MAGNETIC GRID VARIATION TO -999.0
-		*/
+		  */
 
       if (glat.abs() >= 55.0) {
-        if (glat > 0.0 && glon >= 0.0) {
+        if (glat >= 0.0 && glon >= 0.0) {
           gv = dec - glon;
-        } else if (glat > 0.0 && glon < 0.0) {
+        } else if (glat >= 0.0 && glon < 0.0) {
           gv = dec + glon.abs();
         } else if (glat < 0.0 && glon >= 0.0) {
           gv = dec + glon;
