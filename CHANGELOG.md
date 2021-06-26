@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Fix for null safety
+
 ## 0.2.0
 
 - Support the web
