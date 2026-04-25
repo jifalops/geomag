@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Upgrade to 2025 WMM coefficients
+- Update tests to use WMM2025 test values
+
 ## 0.2.1
 
 - Fix for null safety
